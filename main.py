@@ -1,8 +1,7 @@
-#prueba1
-
 import pandas as pd
+import geopandas as gpd
 
-from sklearn.cluster import KMeans
+
 from functions import Utilidades
 
 
@@ -15,28 +14,17 @@ def main():
     
     data=utils.cargar_csv()
 
-    data_final = utils.alistar_datos(data,['codigo_manzana'])
+    datos_mapas = gpd.read_file('./mapas/manzana/MGN_URB_MANZANA.shp')
+    datos_mapas = datos_mapas[datos_mapas['DPTO_CCDGO'] == '50'][['DPTO_CCDGO','MPIO_CCDGO','MANZ_CCNCT','geometry']]
     
-    kmeans = KMeans().fit(data_final)
-    data['cluster'] = kmeans.predict(data_final)
     
-    print(data.columns)
-    print(kmeans.cluster_centers_)
+    print(data.head())
+    print(datos_mapas.head())
 
-    #data.to_csv('datos_cluster.csv',index=False)
+    final = data.merge(datos_mapas[['MANZ_CCNCT','geometry']], how='left', left_on='codigo_manzana', right_on='MANZ_CCNCT')
+    print(final.head())
+    print(final.info())
 
 
 if __name__ == '__main__':
   main()
-
-
-
-
-
-
-
-
-if __name__ == '__main__':
-
-  main()
-
