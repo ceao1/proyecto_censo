@@ -14,9 +14,8 @@ def main():
     
     data=utils.cargar_csv()
 
-    datos_mapas = gpd.read_file('./mapas/manzana/MGN_URB_MANZANA.shp')
-    datos_mapas = datos_mapas[datos_mapas['DPTO_CCDGO'] == '50'][['DPTO_CCDGO','MPIO_CCDGO','MANZ_CCNCT','geometry']]
-    
+    datos_mapas = utils.cargar_mapa()
+    datos_mapas = utils.depurar_columnas(gpd_mapa=datos_mapas)
     
     print(data.head())
     print(datos_mapas.head())
