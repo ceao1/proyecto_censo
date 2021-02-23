@@ -6,6 +6,8 @@ import geopandas as gpd
 import folium
 from folium import plugins
 from folium.plugins import HeatMap
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 from functions import Utilidades
@@ -27,6 +29,7 @@ if __name__ == '__main__':
 
   final = utils.unir_dataframes(df_izquierda=data, indice_izquierda='codigo_manzana', df_derecha=datos_mapas[['MANZ_CCNCT','geometry']], indice_derecha='MANZ_CCNCT')
 
+ 
   for feature in final.columns[1:-2]:
     print(feature)
     mapa = Mapa(location=[4.05, -73.627321], zoom_start=7)
@@ -34,5 +37,9 @@ if __name__ == '__main__':
     folium.LayerControl().add_to(mapa)
     nombre_mapa = './mapas_finales/mapa_' + feature + '.html'
     mapa.save(nombre_mapa)
-
-  print(final.iloc[:,1:-2].corr())
+ 
+  correlacion = final.iloc[:,1:-2].corr()
+  cmap = sns.diverging_palette(230, 20, as_cmap=True)
+  figura = sns.heatmap(correlacion, cmap=cmap, vmax=1, annot=True,
+            square=True, linewidths=.5, cbar_kws={"shrink": .5})
+  figura.figure.savefig('./imagenes/correlation.png')
